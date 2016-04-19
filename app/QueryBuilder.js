@@ -1,5 +1,5 @@
 
-class Db {
+export default class QueryBuilder {
 
     constructor(name, version, displayName, maxSize) {
         this.db = openDatabase(name, version, displayName, maxSize)
@@ -167,6 +167,14 @@ class Db {
         })
     }
 
+    buildInsert(table, values) {
+        Object.keys(values)
+    }
+
+    insert(table, values) {
+        //INSERT INTO user (name, age) values({name}, {age})
+    }
+
     sql(query, data = {}) {
         const { db } = this
         let params = []
@@ -183,7 +191,7 @@ class Db {
             return '?';
         });
 
-        console.log(query, params)
+        //console.log(query, params)
 
         return new Promise((resolve, reject) => {
             db.transaction(tx => {
@@ -191,7 +199,4 @@ class Db {
             })
         })
     }
-
-
-
 }
