@@ -3,7 +3,6 @@ class Db {
 
     constructor(name, version, displayName, maxSize) {
         this.db = openDatabase(name, version, displayName, maxSize)
-        this.query = {}
 
         this.operators = [
             { name: 'select', build: this.buildSelect },
@@ -13,6 +12,8 @@ class Db {
             { name: 'limit', build: this.buildLimit },
             { name: 'offset', build: this.buildOffset },
         ]
+
+        this.query = {}
     }
 
     add(operator, params) {
@@ -48,10 +49,6 @@ class Db {
     buildOffset(params) {
         let offset = params.pop()
         return `OFFSET ${offset}`
-    }
-
-    buildParams() {
-        return Object.assign.apply({}, this.query.params)
     }
 
     resetQuery() {
@@ -124,6 +121,10 @@ class Db {
 
             return ''
         }).join(' ')
+    }
+
+    buildParams() {
+        return Object.assign.apply({}, this.query.params)
     }
 
     sql(query, data = {}) {
