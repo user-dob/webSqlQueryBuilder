@@ -1,5 +1,10 @@
 import co from 'co'
 
+function* range(min, max) {
+    for(let i=min; i<=max; i++) yield i
+}
+
+
 export default class Fixture {
 
     constructor(db) {
@@ -29,7 +34,7 @@ export default class Fixture {
 
     create() {
 
-        const { db, getRandomInt, range } = this
+        const { db, getRandomInt } = this
 
         co(function *() {
             yield db.sql('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY ASC, name TEXT NOT NULL, age INT NOT NULL)')
@@ -66,12 +71,6 @@ export default class Fixture {
 
     getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
-    range(min, max) {
-        return function *() {
-            for(let i=min; i<=max; i++) yield i
-        }
     }
 }
 
