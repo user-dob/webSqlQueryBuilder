@@ -7,8 +7,7 @@ const db = new Db('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
 
 
 let query =  db
-    .select('id')
-    //.select()
+    .select('id', 'name')
     .from('people')
     .where('name={name} or id in ({ids})', {
         ids: [2,3],
@@ -16,13 +15,7 @@ let query =  db
     })
     .orderBy('id DESC', 'name DESC')
     .limit(2)
-
-
-query
-    .select('name')
     .all()
     .then(data => {
         console.log(data)
     })
-
-

@@ -32,7 +32,7 @@ class Db {
     }
 
     buildWhere(params) {
-        let where = params.join(' ')
+        let where = params.join(' AND ')
         return `WHERE ${where}`
     }
 
@@ -94,17 +94,6 @@ class Db {
         return this
     }
 
-    all() {
-        let query = this.buildQuery()
-        let params = this.buildParams()
-
-        this.resetQuery()
-
-        return this.sql(query, params).then(result => {
-            return [...result.rows]
-        })
-    }
-
     text() {
         return this.buildQuery()
     }
@@ -125,6 +114,21 @@ class Db {
 
     buildParams() {
         return Object.assign.apply({}, this.query.params)
+    }
+
+    execute() {
+        let query = this.buildQuery()
+        let params = this.buildParams()
+
+        this.resetQuery()
+
+        return this.sql(query, params)
+    }
+
+    all() {
+        return this.execute().then(result => {
+            return [...result.rows]
+        })
     }
 
     sql(query, data = {}) {
