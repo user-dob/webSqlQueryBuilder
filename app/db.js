@@ -7,8 +7,11 @@ class Db {
         this.operators = [
             { name: 'select', build: this.buildSelect },
             { name: 'from', build: this.buildFrom },
+            { name: 'join', build: this.buildJoin },
             { name: 'where', build: this.buildWhere },
             { name: 'orderBy', build: this.buildOrderBy },
+            { name: 'groupBy', build: this.buildGroupBy },
+            { name: 'having', build: this.buildHaving },
             { name: 'limit', build: this.buildLimit },
             { name: 'offset', build: this.buildOffset },
         ]
@@ -31,6 +34,12 @@ class Db {
         return `FROM ${from}`
     }
 
+    buildJoin(params) {
+        return params.map(join => {
+            return `${join.method} ${join.table} ON ${join.on}`
+        }).join(' ')
+    }
+
     buildWhere(params) {
         let where = params.join(' AND ')
         return `WHERE ${where}`
@@ -39,6 +48,16 @@ class Db {
     buildOrderBy(params) {
         let orderBy = params.join(',')
         return `ORDER BY ${orderBy}`
+    }
+
+    buildGroupBy(params) {
+        let groupBy = params.join(',')
+        return `GROUP BY ${groupBy}`
+    }
+
+    buildHaving(params) {
+        let having = params.join(' AND ')
+        return `HAVING ${having}`
     }
 
     buildLimit(params) {
@@ -66,7 +85,13 @@ class Db {
     }
 
     join(table, on) {
+        this.add('join', {method: 'JOIN', table, on})
+        return this
+    }
 
+    leftJoin(table, on) {
+        this.add('join', {method: 'LEFT JOIN', table, on})
+        return this
     }
 
     where(where, params = {}) {
@@ -81,6 +106,17 @@ class Db {
 
     orderBy(...params) {
         this.add('orderBy', params)
+        return this
+    }
+
+    groupBy(...params) {
+        this.add('groupBy', params)
+        return this
+    }
+
+    having(having, params = {}) {
+        this.add('having', having)
+        this.add('params', params)
         return this
     }
 
@@ -113,7 +149,7 @@ class Db {
     }
 
     buildParams() {
-        return Object.assign.apply({}, this.query.params)
+        return Object.assign.apply({}, this.query.params || [{}])
     }
 
     execute() {
