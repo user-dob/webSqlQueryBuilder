@@ -10,39 +10,21 @@ export default class Command {
     }
 
     insert(table, params) {
-        let keys = Object.keys(params),
-            fields = keys.join(','),
-            values = '{'+keys.join('},{')+'}',
-            query = `INSERT INTO ${table} (${fields}) values(${values})`;
 
-        return this.sql(query, params)
-    }
+        params = Array.isArray(params) ? params : [params]
 
-    insertAll(table, fields, params) {
+        let data = params.map(item => {
+            let keys = Object.keys(item),
+                fields = keys.join(','),
+                values = [...'?'.repeat(keys.length)];
 
-        const { db } = this
-        let data = []
-
-        db.transaction(tx => {
-            for(let i=0; i<100; i++) {
-                data.push(new Promise((resolve, reject) => {
-                    tx.executeSql('INSERT INTO user (name,age) VALUES (?,?)', [`mame ${i}`, i], (tx, result) => resolve(result), (tx, error) => reject(error))
-                }))
+            return {
+                query: `INSERT INTO ${table} (${fields}) values(${values})`,
+                params: keys.map(key => item[key])
             }
         })
 
-        return Promise.all(data)
-
-
-
-        let values = [...'?'.repeat(fields.length)].toString()
-        values = `(${values}),`.repeat(params.length).slice(0,-1)
-
-        fields = fields.join(',')
-
-        let query = `INSERT INTO ${table} (${fields}) values ${values}`
-
-        return this.execute(query, [].concat.apply([], params))
+        return this.execute(data)
     }
 
     execute(query, params) {
