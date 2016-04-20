@@ -1,15 +1,17 @@
 import 'babel-polyfill'
 
 import QueryBuilder from './QueryBuilder'
+import Command from './Command'
 import Fixture from './Fixture'
 
-const db = new QueryBuilder('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
 
-new Fixture(db)
+const db = openDatabase('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
+let command = new Command(db)
+let query = new QueryBuilder(command)
 
+new Fixture(command)
 
-
-//db
+//query
 //    .select('u.id, u.name, count(p.id) as count')
 //    .from('user as u')
 //    .join('user_post as up', 'u.id=up.user_id')

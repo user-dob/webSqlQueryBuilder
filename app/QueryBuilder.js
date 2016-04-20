@@ -1,8 +1,8 @@
 
 export default class QueryBuilder {
 
-    constructor(name, version, displayName, maxSize) {
-        this.db = openDatabase(name, version, displayName, maxSize)
+    constructor(command) {
+        this.command = command
 
         this.operators = [
             { name: 'select', build: this.buildSelect },
@@ -158,46 +158,21 @@ export default class QueryBuilder {
 
         this.resetQuery()
 
-        return this.sql(query, params)
+        return this.command.sql(query, params)
     }
 
     all() {
         return this.execute().then(result => {
-            return [...result.rows]
-        })
-    }
 
-    insert(table, params) {
-        let keys = Object.keys(params),
-            names = keys.join(','),
-            values = '{'+keys.join('},{')+'}',
-            query = `INSERT INTO ${table} (${names}) values(${values})`;
-
-        return this.sql(query, params)
-    }
-
-    sql(query, data = {}) {
-        const { db } = this
-        let params = []
-
-        query = query.replace(/\{([^{}]*)\}/g, function(math, name) {
-            let value = data[name]
-
-            if(Array.isArray(value)) {
-                params = params.concat(value)
-                return value.map(v => '?')
+            //TODO
+            let data = []
+            for(let i=0; i<result.rows.length; i++) {
+                data.push(result.rows.item(i))
             }
+            return data
 
-            params.push(value)
-            return '?';
-        });
 
-        //console.log(query, params)
-
-        return new Promise((resolve, reject) => {
-            db.transaction(tx => {
-                tx.executeSql(query, params, (tx, result) => resolve(result), (tx, error) => reject(error))
-            })
+            return [...result.rows]
         })
     }
 }
