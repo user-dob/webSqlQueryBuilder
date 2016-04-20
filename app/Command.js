@@ -21,16 +21,17 @@ export default class Command {
     insertAll(table, fields, params) {
 
         const { db } = this
+        let data = []
 
         db.transaction(tx => {
             for(let i=0; i<100; i++) {
-                tx.executeSql('INSERT INTO user (name,age) VALUES (?,?)', [`mame ${i}`, i])
+                data.push(new Promise((resolve, reject) => {
+                    tx.executeSql('INSERT INTO user (name,age) VALUES (?,?)', [`mame ${i}`, i], (tx, result) => resolve(result), (tx, error) => reject(error))
+                }))
             }
         })
 
-
-        return
-
+        return Promise.all(data)
 
 
 
@@ -47,7 +48,21 @@ export default class Command {
     execute(query, params) {
         const { db } = this
 
-        console.log(query, params)
+        if(Array.isArray(query)) {
+            let items = query
+
+            return new Promise((resolve, reject) => {
+                db.transaction(tx => {
+                    let promises = items.map(item => {
+                        return new Promise((res, rej) => {
+                            tx.executeSql(item.query, item.params, (tx, result) => res(result), (tx, error) => rej(error))
+                        })
+                    })
+
+                    resolve(promises)
+                })
+            }).then(promises => Promise.all(promises))
+        }
 
         return new Promise((resolve, reject) => {
             db.transaction(tx => {
