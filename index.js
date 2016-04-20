@@ -48,3 +48,16 @@ class Example {
     method(){}
 }
 
+class User {
+
+    @schema(Schema.Integer.PK.AutoIncrement)
+    id() {}
+
+    @schema(Schema.String)
+    name() {}
+
+    @schema(Schema.OneToMany('post', 'user.id=post.user_id'))
+    posts() {}
+
+}
+
