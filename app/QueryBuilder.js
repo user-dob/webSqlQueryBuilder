@@ -167,12 +167,13 @@ export default class QueryBuilder {
         })
     }
 
-    buildInsert(table, values) {
-        Object.keys(values)
-    }
+    insert(table, params) {
+        let keys = Object.keys(params),
+            names = keys.join(','),
+            values = '{'+keys.join('},{')+'}',
+            query = `INSERT INTO ${table} (${names}) values(${values})`;
 
-    insert(table, values) {
-        //INSERT INTO user (name, age) values({name}, {age})
+        return this.sql(query, params)
     }
 
     sql(query, data = {}) {
