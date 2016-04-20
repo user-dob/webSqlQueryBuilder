@@ -56,7 +56,7 @@ export default class Schema {
             return name + ' ' + schema[name]
         })
 
-        return `CREATE TABLE IF NOT EXISTS ${name}(${fields})`
+        return `CREATE TABLE ${name}(${fields})`
     }
 
 

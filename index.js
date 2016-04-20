@@ -26,8 +26,6 @@ query
         console.log(data)
     })
 
-command.sql('SELECT * FROM user LIMIT 1').then(data => console.log(data))
-
 let user = new Schema('user', {
     id: Schema.Integer.PK.AutoIncrement,
     name: Schema.String,
