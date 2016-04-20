@@ -37,7 +37,7 @@ export default class Fixture {
         const { command, getRandomInt } = this
 
         co(function *() {
-            yield command.sql('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY ASC, name TEXT NOT NULL, age INT NOT NULL)')
+            yield command.sql('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY, name TEXT NOT NULL, age INT NOT NULL)')
             console.log('create table user')
 
             yield command.insert('user', [...range(1, 100)].map(i => {
@@ -47,7 +47,7 @@ export default class Fixture {
         })
 
         co(function *() {
-            yield command.sql('CREATE TABLE IF NOT EXISTS post(id INTEGER PRIMARY KEY ASC, title TEXT NOT NULL, text TEXT NOT NULL)')
+            yield command.sql('CREATE TABLE IF NOT EXISTS post(id INTEGER PRIMARY KEY, title TEXT NOT NULL, text TEXT NOT NULL)')
             console.log('create table post')
 
             yield command.insert('post', [...range(1, 100)].map(i => {
@@ -57,7 +57,7 @@ export default class Fixture {
         })
 
         co(function *() {
-            yield command.sql('CREATE TABLE IF NOT EXISTS user_post(id INTEGER PRIMARY KEY ASC, user_id INTEGER, post_id INTEGER)')
+            yield command.sql('CREATE TABLE IF NOT EXISTS user_post(id INTEGER PRIMARY KEY, user_id INTEGER, post_id INTEGER)')
             console.log('create table user_post')
 
             yield command.insert('user_post', [...range(1, 1000)].map(i => {
@@ -67,7 +67,7 @@ export default class Fixture {
         })
 
         co(function *() {
-            yield command.sql('CREATE TABLE IF NOT EXISTS comment(id INTEGER PRIMARY KEY ASC, post_id INTEGER, text TEXT NOT NULL)')
+            yield command.sql('CREATE TABLE IF NOT EXISTS comment(id INTEGER PRIMARY KEY, post_id INTEGER, text TEXT NOT NULL)')
             console.log('create table comment')
 
             yield command.insert('comment', [...range(1, 400)].map(i => {

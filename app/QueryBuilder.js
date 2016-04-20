@@ -130,7 +130,7 @@ export default class QueryBuilder {
         return this
     }
 
-    text() {
+    toSQL() {
         return this.buildQuery()
     }
 

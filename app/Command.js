@@ -5,10 +5,6 @@ export default class Command {
         this.db = db
     }
 
-    transaction(cb) {
-
-    }
-
     insert(table, params) {
 
         params = Array.isArray(params) ? params : [params]
