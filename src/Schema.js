@@ -45,6 +45,10 @@ export default class Schema {
         return new Type('BLOB')
     }
 
+    static OneToMany() {
+
+    }
+
     constructor(name, schema = {}) {
         Object.assign(this, {name, schema})
     }
@@ -58,6 +62,11 @@ export default class Schema {
 
         return `CREATE TABLE ${name}(${fields})`
     }
+}
 
 
+export function schema(type) {
+    return (target, property, descriptor) => {
+        console.log(property, type)
+    }
 }
