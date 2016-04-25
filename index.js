@@ -37,6 +37,19 @@ let query = new QueryBuilder(command)
 //
 //let post = new Schema('post')
 
+class Post {
+
+    @schema(Schema.Integer.PK.AutoIncrement)
+    id() {}
+
+    @schema(Schema.String)
+    name() {}
+
+    @schema(Schema.ManyToOne(User, 'user.id=post.user_id'))
+    user() {}
+
+}
+
 class User {
 
     @schema(Schema.Integer.PK.AutoIncrement)
@@ -45,7 +58,7 @@ class User {
     @schema(Schema.String)
     name() {}
 
-    @schema(Schema.OneToMany('post', 'user.id=post.user_id'))
+    @schema(Schema.OneToMany(Post, 'user.id=post.user_id'))
     posts() {}
 }
 

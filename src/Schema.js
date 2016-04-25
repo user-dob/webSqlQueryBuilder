@@ -49,6 +49,10 @@ export default class Schema {
 
     }
 
+    static ManyToOne() {
+
+    }
+
     constructor(name, schema = {}) {
         Object.assign(this, {name, schema})
     }
