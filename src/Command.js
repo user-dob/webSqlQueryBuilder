@@ -64,6 +64,8 @@ export default class Command {
             return '?';
         });
 
+        console.log(query, params)
+
         return this.execute(query, params)
     }
 }

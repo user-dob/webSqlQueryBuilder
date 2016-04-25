@@ -48,7 +48,7 @@ export default class Schema {
             throw `Schema by model ${model.name} not found`
         }
 
-        return new Schema(model.name.toLocaleLowerCase(), map.get(model))
+        return new Schema(model.table, map.get(model))
     }
 
     static get Null() {

@@ -1,14 +1,12 @@
 import 'babel-polyfill'
 
-import { Command, QueryBuilder, Fixture, Schema, schema, Model } from './src'
+import { Db, Fixture, Schema, schema, Model } from './src'
 
-const db = openDatabase('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
-let command = new Command(db)
-let query = new QueryBuilder(command)
+Db.open('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
 
 //new Fixture(command)
 
-//query
+//Db.query
 //    .select('u.id, u.name, count(p.id) as count')
 //    .from('user as u')
 //    .join('user_post as up', 'u.id=up.user_id')
@@ -25,17 +23,7 @@ let query = new QueryBuilder(command)
 //    .then(data => {
 //        console.log(data)
 //    })
-//
-//let user = new Schema('user', {
-//    id: Schema.Integer.PK.AutoIncrement,
-//    name: Schema.String,
-//    foo: Schema.String.NotNull,
-//    bar: 'Char(10)'
-//})
-//
-//console.log( user.toString() )
-//
-//let post = new Schema('post')
+
 
 class Post extends Model {
 
@@ -58,8 +46,15 @@ class User extends Model {
     @schema(Schema.String)
     name() {}
 
+    @schema(Schema.Integer)
+    age() {}
+
     @schema(Schema.OneToMany(Post, 'user.id=post.user_id'))
     posts() {}
 }
 
 console.log(Schema.getSchemaByModel(Post))
+
+User.query().all().then(data => {
+    console.log(data)
+})
