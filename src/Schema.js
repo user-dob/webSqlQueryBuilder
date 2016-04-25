@@ -1,3 +1,20 @@
+let map = new Map()
+
+export function schema(type) {
+    return (target, property, descriptor) => {
+
+        let model = target.constructor
+
+        if(!map.has(model)) {
+            map.set(model, [])
+        }
+
+        map.get(model).push({property, type})
+    }
+}
+
+
+
 class Type {
     constructor(type) {
         this.type = type
@@ -24,6 +41,10 @@ class Type {
 }
 
 export default class Schema {
+
+    static getSchemaByModel(model) {
+        return map.get(model)
+    }
 
     static get Null() {
         return new Type('NULL')
@@ -57,6 +78,10 @@ export default class Schema {
         Object.assign(this, {name, schema})
     }
 
+    add(property, type) {
+        this.schema[property] = type
+    }
+
     toString() {
         const { schema, name } = this
 
@@ -68,9 +93,3 @@ export default class Schema {
     }
 }
 
-
-export function schema(type) {
-    return (target, property, descriptor) => {
-        console.log(property, type)
-    }
-}

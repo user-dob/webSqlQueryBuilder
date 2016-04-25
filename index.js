@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 
-import { Command, QueryBuilder, Fixture, Schema, schema } from './src'
+import { Command, QueryBuilder, Fixture, Schema, schema, Model } from './src'
 
 const db = openDatabase('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
 let command = new Command(db)
@@ -37,7 +37,7 @@ let query = new QueryBuilder(command)
 //
 //let post = new Schema('post')
 
-class Post {
+class Post extends Model {
 
     @schema(Schema.Integer.PK.AutoIncrement)
     id() {}
@@ -50,7 +50,7 @@ class Post {
 
 }
 
-class User {
+class User extends Model {
 
     @schema(Schema.Integer.PK.AutoIncrement)
     id() {}
@@ -62,3 +62,4 @@ class User {
     posts() {}
 }
 
+console.log(Schema.getSchemaByModel(Post))
