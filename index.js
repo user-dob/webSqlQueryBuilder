@@ -6,7 +6,7 @@ Db.open('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
 
 //new Fixture(command)
 
-//Db.query
+//Db.query()
 //    .select('u.id, u.name, count(p.id) as count')
 //    .from('user as u')
 //    .join('user_post as up', 'u.id=up.user_id')
@@ -36,6 +36,7 @@ class Post extends Model {
     @schema(Schema.ManyToOne(User, 'user.id=post.user_id'))
     user() {}
 
+
 }
 
 class User extends Model {
@@ -53,7 +54,7 @@ class User extends Model {
     posts() {}
 }
 
-console.log(Schema.getSchemaByModel(Post))
+//console.log(Schema.getSchemaByModel(Post))
 
 User.query().select('id', 'name').all().then(data => {
     console.log(data)

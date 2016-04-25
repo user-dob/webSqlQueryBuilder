@@ -4,8 +4,7 @@ export default class QueryModelBuilder extends QueryBuilder {
 
     constructor(command, Model) {
         super(command)
-
-        this.Model = Model
+        Object.assign(this, { Model })
     }
 
     all() {

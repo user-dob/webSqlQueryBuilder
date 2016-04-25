@@ -4,6 +4,10 @@ import Schema from './Schema'
 
 export default class Model {
 
+    constructor(data) {
+        Object.assign(this, data)
+    }
+
     static get table() {
         return this.name.toLocaleLowerCase()
     }
