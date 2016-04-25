@@ -9,6 +9,6 @@ export default class Model {
     }
 
     static query() {
-        return Db.query.select().from(this.table)
+        return Db.queryModel(this).select().from(this.table)
     }
 }

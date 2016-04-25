@@ -55,6 +55,6 @@ class User extends Model {
 
 console.log(Schema.getSchemaByModel(Post))
 
-User.query().all().then(data => {
+User.query().select('id', 'name').all().then(data => {
     console.log(data)
 })

@@ -1,5 +1,7 @@
 import Command from './Command'
 import QueryBuilder from './QueryBuilder'
+import QueryModelBuilder from './QueryModelBuilder'
+
 
 let db, command;
 
@@ -14,7 +16,11 @@ export default class Db {
         return command
     }
 
-    static get query() {
+    static query() {
         return new QueryBuilder(command)
+    }
+
+    static queryModel(model) {
+        return new QueryModelBuilder(command, model)
     }
 }
