@@ -6,10 +6,10 @@ export function schema(type) {
         let model = target.constructor
 
         if(!map.has(model)) {
-            map.set(model, [])
+            map.set(model, {})
         }
 
-        map.get(model).push({property, type})
+        map.get(model)[property] = type
     }
 }
 
@@ -43,7 +43,12 @@ class Type {
 export default class Schema {
 
     static getSchemaByModel(model) {
-        return map.get(model)
+
+        if(!map.has(model)) {
+            throw `Schema by model ${model.name} not found`
+        }
+
+        return new Schema(model.name.toLocaleLowerCase(), map.get(model))
     }
 
     static get Null() {
