@@ -12,7 +12,7 @@ export default class Model {
         return this.name.toLocaleLowerCase()
     }
 
-    static query() {
-        return Db.queryModel(this).select().from(this.table)
+    static select(...params) {
+        return Db.queryModel(this).select(params).from(this.table)
     }
 }

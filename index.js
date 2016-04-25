@@ -19,7 +19,6 @@ Db.open('Test', '1.0', 'Test DB', 2 * 1024 * 1024)
 //        count: 10
 //    })
 //    .limit(10)
-//    .all()
 //    .then(data => {
 //        console.log(data)
 //    })
@@ -74,9 +73,10 @@ class Comment extends Model {
 //    console.log(data)
 //})
 
-Post.query().select().limit(10).all().then(data => {
+Post.select().limit(10).then(data => {
     console.log(data)
 })
+
 
 
 

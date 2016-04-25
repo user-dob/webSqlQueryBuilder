@@ -161,7 +161,7 @@ export default class QueryBuilder {
         return this.command.sql(query, params)
     }
 
-    all() {
+    then(cb) {
         return this.execute().then(result => {
 
             //TODO
@@ -173,6 +173,6 @@ export default class QueryBuilder {
 
 
             return [...result.rows]
-        })
+        }).then(cb)
     }
 }
