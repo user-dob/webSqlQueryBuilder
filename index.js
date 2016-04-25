@@ -36,6 +36,8 @@ class Post extends Model {
     @schema(Schema.ManyToOne(User, 'user.id=post.user_id'))
     user() {}
 
+    @schema(Schema.OneToMany(Comment, 'post.id=comment.post_id'))
+    comments() {}
 
 }
 
@@ -54,8 +56,28 @@ class User extends Model {
     posts() {}
 }
 
+class Comment extends Model {
+
+    @schema(Schema.Integer.PK.AutoIncrement)
+    id() {}
+
+    @schema(Schema.String)
+    text() {}
+
+    @schema(Schema.ManyToOne(Post, 'post.id=comment.post_id'))
+    post() {}
+}
+
 //console.log(Schema.getSchemaByModel(Post))
 
-User.query().select('id', 'name').all().then(data => {
+//User.query().select('id', 'name').all().then(data => {
+//    console.log(data)
+//})
+
+Post.query().select().limit(10).all().then(data => {
     console.log(data)
 })
+
+
+
+
