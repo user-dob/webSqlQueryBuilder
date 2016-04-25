@@ -14,6 +14,11 @@ export function schema(type) {
 }
 
 
+export function toLowerCase(name) {
+    return name.replace(/[A-Z]/g, (match, offset) => {
+        return (offset == 0 ? '' : '_') + match.toLowerCase()
+    });
+}
 
 class Type {
     constructor(type) {

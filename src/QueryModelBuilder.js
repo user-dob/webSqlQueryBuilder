@@ -7,11 +7,11 @@ export default class QueryModelBuilder extends QueryBuilder {
         Object.assign(this, { Model })
     }
 
-    then(cb) {
+    all() {
         let { Model } = this
-        return super.then(data => {
+        return super.all().then(data => {
             return data.map(item => new Model(item))
-        }).then(cb)
+        })
     }
 
 }

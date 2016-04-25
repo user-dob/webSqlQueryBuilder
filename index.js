@@ -32,10 +32,10 @@ class Post extends Model {
     @schema(Schema.String)
     name() {}
 
-    @schema(Schema.ManyToOne(User, 'user.id=post.user_id'))
+    @schema(Schema.ManyToOne(User))
     user() {}
 
-    @schema(Schema.OneToMany(Comment, 'post.id=comment.post_id'))
+    @schema(Schema.OneToMany(Comment))
     comments() {}
 
 }
@@ -51,7 +51,7 @@ class User extends Model {
     @schema(Schema.Integer)
     age() {}
 
-    @schema(Schema.OneToMany(Post, 'user.id=post.user_id'))
+    @schema(Schema.OneToMany(Post))
     posts() {}
 }
 
@@ -63,7 +63,7 @@ class Comment extends Model {
     @schema(Schema.String)
     text() {}
 
-    @schema(Schema.ManyToOne(Post, 'post.id=comment.post_id'))
+    @schema(Schema.ManyToOne(Post))
     post() {}
 }
 
@@ -73,9 +73,15 @@ class Comment extends Model {
 //    console.log(data)
 //})
 
-Post.select().limit(10).then(data => {
+Post.select().limit(10).all().then(data => {
     console.log(data)
 })
+
+//co(function *() {
+//    let users = User.select().then()
+//    let posts = Post.select().where('user_id in ({ids})', [1,2,3]).then()
+//
+//})
 
 
 

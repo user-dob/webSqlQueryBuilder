@@ -1,5 +1,5 @@
 import Db from './Db'
-import Schema from './Schema'
+import Schema, { toLowerCase } from './Schema'
 
 
 export default class Model {
@@ -9,7 +9,7 @@ export default class Model {
     }
 
     static get table() {
-        return this.name.toLocaleLowerCase()
+        return toLowerCase(this.name)
     }
 
     static select(...params) {
