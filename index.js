@@ -68,11 +68,11 @@ class Comment extends Model {
 }
 
 
-Db.command.sql('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(data => {
+Db.command.execute('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(data => {
     console.log(data)
 })
 
-//Db.command.sql(
+//Db.command.execute(
 //    [
 //        ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}],
 //        ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}]
@@ -82,7 +82,7 @@ Db.command.sql('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(
 //})
 
 
-//Db.command.sql(function *() {
+//Db.command.execute(function *() {
 //
 //    let r1 = yield ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}]
 //    let r2 = yield ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}]
@@ -96,8 +96,6 @@ Db.command.sql('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(
 //})
 
 
-
-
 //console.log(Schema.getSchemaByModel(Post))
 
 //Post.select().limit(10).all().then(data => {
@@ -105,13 +103,10 @@ Db.command.sql('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(
 //})
 
 
-//Db.command.sql(function *() {
-//
-//    let users = yield User.select().limit(10).all()
-//    //let posts = yield Post.select().where('user_id in ({ids})', {ids: users.ids}).all()
-//
-//
-//    console.log(users)
-//
-//
-//})
+Db.command.sql(function *() {
+
+    let users = yield User.select().limit(10).all()
+    let posts = yield Post.select().where('user_id in ({ids})', {ids: users.ids}).all()
+
+    console.log(users)
+})

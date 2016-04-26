@@ -159,16 +159,7 @@ export default class QueryBuilder {
 
     all() {
         return this.execute().then(result => {
-
-            //TODO
-            let data = []
-            for(let i=0; i<result.rows.length; i++) {
-                data.push(result.rows.item(i))
-            }
-            return data
-
-
-            return [...result.rows]
+            return Array.from(result.rows)
         })
     }
 }
