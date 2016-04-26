@@ -103,10 +103,12 @@ Db.command.execute('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).t
 //})
 
 
-Db.command.sql(function *() {
+Db.command.execute(function *() {
 
-    let users = yield User.select().limit(10).all()
-    let posts = yield Post.select().where('user_id in ({ids})', {ids: users.ids}).all()
+    let users = yield User.select().limit(10)
+    let posts = yield Post.select().where('id in ({ids})', {ids: [1,2,3]})
+    //let posts = yield Post.select().where('user_id in ({ids})', {ids: users.ids}).all()
 
-    console.log(users)
+    console.log(users.rows)
+    console.log(posts.rows)
 })

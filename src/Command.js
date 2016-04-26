@@ -44,7 +44,15 @@ export default class Command {
     }
 
     getPromise(tx, query, data) {
-        let {sql, params} = Command.normalize(query, data)
+        let sql, params
+
+        if(query instanceof QueryBuilder) {
+            data = query.getData()
+            query = query.getQuery()
+        }
+
+        ({sql, params} = Command.normalize(query, data))
+
         return new Promise((res, rej) => {
             tx.executeSql(sql, params, (tx, result) => res(result), (tx, error) => rej(error))
         })
@@ -55,7 +63,7 @@ export default class Command {
 
         return new Promise((resolve, reject) => {
             db.transaction(tx => {
-                let promises = items.map(item => getPromise(tx, item[0], item[1]))
+                let promises = items.map(item => getPromise(tx, item))
                 resolve(promises)
             })
         }).then(promises => Promise.all(promises))
@@ -68,7 +76,7 @@ export default class Command {
             let next = generator.next(data);
 
             if (!next.done) {
-                getPromise(tx, next.value[0], next.value[1]).then(
+                getPromise(tx, next.value).then(
                         result => execute(tx, generator, result, resolve),
                         err => generator.throw(err)
                 );

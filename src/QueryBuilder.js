@@ -144,13 +144,13 @@ export default class QueryBuilder {
         }).join(' ')
     }
 
-    getParams() {
+    getData() {
         return Object.assign.apply({}, this.query.params || [{}])
     }
 
     execute() {
         let query = this.getQuery()
-        let params = this.getParams()
+        let params = this.getData()
 
         this.resetQuery()
 
