@@ -67,23 +67,51 @@ class Comment extends Model {
     post() {}
 }
 
-//console.log(Schema.getSchemaByModel(Post))
 
-//User.query().select('id', 'name').all().then(data => {
-//    console.log(data)
-//})
-
-Post.select().limit(10).all().then(data => {
+Db.command.sql('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(data => {
     console.log(data)
 })
 
-//co(function *() {
-//    let users = User.select().then()
-//    let posts = Post.select().where('user_id in ({ids})', [1,2,3]).then()
+//Db.command.sql(
+//    [
+//        ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}],
+//        ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}]
+//    ]
+//).then(data => {
+//    console.log(data)
+//})
+
+
+//Db.command.sql(function *() {
 //
+//    let r1 = yield ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}]
+//    let r2 = yield ['SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}]
+//
+//    return r2
+//
+//}).then(data => {
+//    console.log(data)
+//}).catch(() => {
+//    console.log('}).catch(() => {')
 //})
 
 
 
 
+//console.log(Schema.getSchemaByModel(Post))
 
+//Post.select().limit(10).all().then(data => {
+//    console.log(data)
+//})
+
+
+//Db.command.sql(function *() {
+//
+//    let users = yield User.select().limit(10).all()
+//    //let posts = yield Post.select().where('user_id in ({ids})', {ids: users.ids}).all()
+//
+//
+//    console.log(users)
+//
+//
+//})

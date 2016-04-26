@@ -1,3 +1,4 @@
+import co from 'co'
 
 export default class Command {
 
@@ -23,36 +24,10 @@ export default class Command {
         return this.execute(data)
     }
 
-    execute(query, params) {
-        const { db } = this
+    static normalize(query, data = {}) {
+        let sql, params = []
 
-        if(Array.isArray(query)) {
-            let items = query
-
-            return new Promise((resolve, reject) => {
-                db.transaction(tx => {
-                    let promises = items.map(item => {
-                        return new Promise((res, rej) => {
-                            tx.executeSql(item.query, item.params, (tx, result) => res(result), (tx, error) => rej(error))
-                        })
-                    })
-
-                    resolve(promises)
-                })
-            }).then(promises => Promise.all(promises))
-        }
-
-        return new Promise((resolve, reject) => {
-            db.transaction(tx => {
-                tx.executeSql(query, params, (tx, result) => resolve(result), (tx, error) => reject(error))
-            })
-        })
-    }
-
-    sql(query, data = {}) {
-        let params = []
-
-        query = query.replace(/\{([^{}]*)\}/g, function(math, name) {
+        sql = query.replace(/\{([^{}]*)\}/g, function(math, name) {
             let value = data[name]
 
             if(Array.isArray(value)) {
@@ -64,8 +39,70 @@ export default class Command {
             return '?';
         });
 
-        console.log(query, params)
-
-        return this.execute(query, params)
+        return {sql, params}
     }
+
+    getPromise(tx, query, data) {
+        let {sql, params} = Command.normalize(query, data)
+        return new Promise((res, rej) => {
+            tx.executeSql(sql, params, (tx, result) => res(result), (tx, error) => rej(error))
+        })
+    }
+
+    sqlByArray(items) {
+        const { db, getPromise } = this
+
+        return new Promise((resolve, reject) => {
+            db.transaction(tx => {
+                let promises = items.map(item => getPromise(tx, item[0], item[1]))
+                resolve(promises)
+            })
+        }).then(promises => Promise.all(promises))
+    }
+
+    sqlByGenerator(generator, data) {
+        const { db, getPromise } = this
+
+        function execute(tx, generator, data, resolve) {
+            let next = generator.next(data);
+
+            if (!next.done) {
+                getPromise(tx, next.value[0], next.value[1]).then(
+                        result => execute(tx, generator, result, resolve),
+                        err => generator.throw(err)
+                );
+            } else {
+                resolve(next.value)
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            db.transaction(tx => {
+                execute(tx, generator, data, resolve)
+            })
+        })
+    }
+
+    sqlByQuery(query, data) {
+        const { db, getPromise } = this
+        return new Promise((resolve, reject) => {
+            db.transaction(tx => {
+                getPromise(tx, query, data).then(resolve, reject)
+            })
+        })
+    }
+
+    sql(query, data = {}) {
+
+        if(Array.isArray(query)) {
+            return this.sqlByArray(query)
+        }
+
+        if(query.constructor && query.constructor.name == 'GeneratorFunction') {
+            return this.sqlByGenerator(query(), data)
+        }
+
+        return this.sqlByQuery(query, data)
+    }
+
 }
