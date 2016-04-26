@@ -130,11 +130,7 @@ export default class QueryBuilder {
         return this
     }
 
-    toSQL() {
-        return this.buildQuery()
-    }
-
-    buildQuery() {
+    getQuery() {
         let { query } = this
 
         return this.operators.map(operator => {
@@ -148,17 +144,17 @@ export default class QueryBuilder {
         }).join(' ')
     }
 
-    buildParams() {
+    getParams() {
         return Object.assign.apply({}, this.query.params || [{}])
     }
 
     execute() {
-        let query = this.buildQuery()
-        let params = this.buildParams()
+        let query = this.getQuery()
+        let params = this.getParams()
 
         this.resetQuery()
 
-        return this.command.sql(query, params)
+        return this.command.execute(query, params)
     }
 
     all() {

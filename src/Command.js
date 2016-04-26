@@ -1,4 +1,5 @@
 import co from 'co'
+import QueryBuilder from './QueryBuilder'
 
 export default class Command {
 
@@ -49,7 +50,7 @@ export default class Command {
         })
     }
 
-    sqlByArray(items) {
+    executeByArray(items) {
         const { db, getPromise } = this
 
         return new Promise((resolve, reject) => {
@@ -60,7 +61,7 @@ export default class Command {
         }).then(promises => Promise.all(promises))
     }
 
-    sqlByGenerator(generator, data) {
+    executeByGenerator(generator, data) {
         const { db, getPromise } = this
 
         function execute(tx, generator, data, resolve) {
@@ -83,7 +84,7 @@ export default class Command {
         })
     }
 
-    sqlByQuery(query, data) {
+    executeByQuery(query, data) {
         const { db, getPromise } = this
         return new Promise((resolve, reject) => {
             db.transaction(tx => {
@@ -92,17 +93,17 @@ export default class Command {
         })
     }
 
-    sql(query, data = {}) {
+    execute(query, data = {}) {
 
         if(Array.isArray(query)) {
-            return this.sqlByArray(query)
+            return this.executeByArray(query)
         }
 
         if(query.constructor && query.constructor.name == 'GeneratorFunction') {
-            return this.sqlByGenerator(query(), data)
+            return this.executeByGenerator(query(), data)
         }
 
-        return this.sqlByQuery(query, data)
+        return this.executeByQuery(query, data)
     }
 
 }
