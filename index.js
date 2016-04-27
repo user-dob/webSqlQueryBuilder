@@ -68,9 +68,9 @@ class Comment extends Model {
 }
 
 
-Db.command.execute('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(data => {
-    console.log(data)
-})
+//Db.command.execute('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).then(data => {
+//    console.log(data)
+//})
 
 //Db.command.execute(
 //    [
@@ -101,7 +101,6 @@ Db.command.execute('SELECT * FROM user WHERE age > {age} LIMIT 10', {age: 10}).t
 //Post.select().limit(10).all().then(data => {
 //    console.log(data)
 //})
-
 
 Db.command.execute(function *() {
 
